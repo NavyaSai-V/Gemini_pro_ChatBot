@@ -8,6 +8,8 @@ import google.generativeai as gen_ai
 
 load_dotenv()
 
+#print(os.getenv("Google_API_Key"))
+
 st.title("Echo Bot")
 
 if "messages" not in st.session_state:
