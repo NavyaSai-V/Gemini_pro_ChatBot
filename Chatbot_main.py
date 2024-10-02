@@ -2,33 +2,44 @@ import os
 
 import streamlit as st
 from dotenv import load_dotenv
-import numpy as np
+
 
 import google.generativeai as gen_ai
 
 load_dotenv()
 
-#print(os.getenv("Google_API_Key"))
+st.set_page_config(
+    page_title= "Chat with Gemini Pro!",
+    page_icon = ":brain",
+    layout= "centered"
+)
 
-st.title("Echo Bot")
+GOOGLE_API_KEY = os.getenv("Google_API_Key")
 
-if "messages" not in st.session_state:
-    st.session_state.messages = []
+gen_ai.configure(api_key = GOOGLE_API_KEY)
+model = gen_ai.GenerativeModel('gemini-pro')
 
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+def transilate_role(user_role):
+    if user_role == 'model':
+        return 'assistant'
+    else:
+        return user_role
+    
+if "chat_session" not in st.session_state:
+    st.session_state.chat_session =  model.start_chat(history = [])
 
-# prompt = st.chat_input("say something")
+st.title("🤖 Gemini Pro - ChatBot")
 
-if prompt:= st.chat_input("say something"):
+for message in st.session_state.chat_session.history:
+    with st.chat_message(transilate_role(message.role)):
+        st.markdown(message.parts[0].text)
 
-    st.chat_message("user").markdown(prompt)
-    st.session_state.messages.append({"role": "user", "content": prompt})
+user_prompt = st.chat_input("Ask Gemini_pro ...")
 
-response = f"Echo: {prompt}"
+if user_prompt:
+    st.chat_message("user").markdown(user_prompt)
 
-with st.chat_message("assistant"):
-    st.markdown(response)
+    gemini_response = st.session_state.chat_session.send_message(user_prompt)
 
-st.session_state.messages.append({"role": "assistant", "content": response})
+    with st.chat_message("assistant"):
+        st.markdown(gemini_response.text)
