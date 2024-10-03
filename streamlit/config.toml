@@ -1,0 +1,15 @@
+[server]
+headless = true
+port = 8501
+enableCORS = false
+
+[theme]
+base = "light"  # You can change this to "dark" if you prefer a dark theme
+primaryColor = "#4CAF50"  # Green
+backgroundColor = "#FFFFFF"  # White
+textColor = "#333333"  # Dark Gray
+font = "sans serif"
+
+[general]
+title = "Chat with Gemini Pro!"
+icon = ":brain"  # You can use emoji or a path to an image file
